@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card text-center">
+        <h2>Delete Subject?</h2>
+        <p>Are you sure you want to delete <strong>{{ subject.name }}</strong>?</p>
+        <p class="text-muted">This will remove all attendance records for this subject. This action cannot be undone.</p>
+        
+        <form method="post" class="mt-4 form-actions-center">
+            {% csrf_token %}
+            <a href="{% url 'subject_detail' subject.id %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

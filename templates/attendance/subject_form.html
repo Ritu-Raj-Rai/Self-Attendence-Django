@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container">
+    <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+    
+    <div class="form-card">
+        <h2>{{ title }}</h2>
+        
+        <form method="post" class="custom-form">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <small class="help-text">{{ field.help_text }}</small>
+                {% endif %}
+                {% if field.errors %}
+                <div class="error-text">
+                    {{ field.errors.0 }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn btn-primary w-100">Save Subject</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

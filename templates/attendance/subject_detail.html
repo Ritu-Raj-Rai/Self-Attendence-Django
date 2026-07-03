@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}{{ subject.name }} - Attendance{% endblock %}
+
+{% block content %}
+<div class="detail-header">
+    <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+    <div class="header-actions">
+        <a href="{% url 'subject_update' subject.id %}" class="btn btn-secondary btn-sm">Edit</a>
+        <a href="{% url 'subject_delete' subject.id %}" class="btn btn-danger btn-sm">Delete</a>
+    </div>
+</div>
+
+<div class="subject-title-area" style="--subject-color: {{ subject.color }}">
+    <h1>{{ subject.name }}</h1>
+    <div class="subject-meta">Target: {{ subject.target_percentage }}%</div>
+</div>
+
+<div class="stats-row">
+    <div class="stat-box">
+        <div class="stat-number">{{ stats.percentage }}%</div>
+        <div class="stat-name">Current</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">{{ stats.present }}</div>
+        <div class="stat-name">Present</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">{{ stats.absent }}</div>
+        <div class="stat-name">Absent</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">{{ stats.total }}</div>
+        <div class="stat-name">Total Classes</div>
+    </div>
+</div>
+
+<div class="calendar-container">
+    <div class="calendar-header">
+        <a href="{% url 'subject_detail_month' subject.id prev_year prev_month %}" class="cal-nav">&larr;</a>
+        <h2>{{ month_name }} {{ year }}</h2>
+        <a href="{% url 'subject_detail_month' subject.id next_year next_month %}" class="cal-nav">&rarr;</a>
+    </div>
+    
+    <div class="calendar-grid">
+        {% for day in days_of_week %}
+        <div class="cal-day-header">{{ day }}</div>
+        {% endfor %}
+        
+        {% for week in calendar %}
+            {% for day in week %}
+            <div class="cal-cell {% if not day.is_current_month %}other-month{% endif %} {% if day.is_today %}today{% endif %} status-{{ day.status }}"
+                 data-date="{{ day.date }}" data-subject="{{ subject.id }}">
+                <span class="day-number">{{ day.day }}</span>
+                <span class="status-indicator"></span>
+            </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    
+    <div class="calendar-legend">
+        <div class="legend-item"><span class="legend-color unmarked"></span> No class</div>
+        <div class="legend-item"><span class="legend-color present"></span> Present</div>
+        <div class="legend-item"><span class="legend-color absent"></span> Absent</div>
+        <div class="legend-item"><span class="legend-color holiday"></span> Holiday</div>
+    </div>
+    <p class="legend-hint">Tap a day to cycle status: Unmarked &rarr; Present &rarr; Absent &rarr; Holiday</p>
+</div>
+
+{% csrf_token %}
+{% endblock %}
