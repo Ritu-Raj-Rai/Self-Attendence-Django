@@ -18,6 +18,6 @@ services:
           name: self-attendance-db
           property: connectionString
 
-  - type: pgo
-    name: self-attendance-db
+databases:
+  - name: self-attendance-db
     plan: free
