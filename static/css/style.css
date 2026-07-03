@@ -20,6 +20,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -182,11 +183,17 @@ main.container {
     display: flex;
     flex-direction: column;
     cursor: pointer;
+    user-select: none;
 }
 
 .subject-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
+}
+
+.subject-card:active {
+    transform: translateY(-2px) scale(0.98);
+    box-shadow: var(--shadow-md);
 }
 
 .card-header {

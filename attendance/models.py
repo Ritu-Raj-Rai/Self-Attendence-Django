@@ -8,6 +8,7 @@ class Subject(models.Model):
         default=75.0,
         validators=[MinValueValidator(0.0), MaxValueValidator(100.0)]
     )
+    session_key = models.CharField(max_length=40, db_index=True, null=True, blank=True)
     
     def __str__(self):
         return self.name

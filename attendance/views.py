@@ -12,6 +12,11 @@ import math
 from .models import Subject, AttendanceRecord
 from .forms import SubjectForm
 
+def get_session_key(request):
+    if not request.session.session_key:
+        request.session.create()
+    return request.session.session_key
+
 def calculate_stats(subject):
     records = subject.attendance_records.all()
     present_count = records.filter(status='present').count()
@@ -35,7 +40,8 @@ def calculate_stats(subject):
 
 @never_cache
 def dashboard(request):
-    subjects = Subject.objects.all()
+    session_key = get_session_key(request)
+    subjects = Subject.objects.filter(session_key=session_key)
     subject_data = []
     
     total_present = 0
@@ -88,7 +94,8 @@ def dashboard(request):
 
 @never_cache
 def subject_detail(request, subject_id, year=None, month=None):
-    subject = get_object_or_404(Subject, id=subject_id)
+    session_key = get_session_key(request)
+    subject = get_object_or_404(Subject, id=subject_id, session_key=session_key)
     stats = calculate_stats(subject)
     
     today = date.today()
@@ -153,14 +160,17 @@ def subject_create(request):
     if request.method == 'POST':
         form = SubjectForm(request.POST)
         if form.is_valid():
-            form.save()
+            subject = form.save(commit=False)
+            subject.session_key = get_session_key(request)
+            subject.save()
             return redirect('dashboard')
     else:
         form = SubjectForm()
     return render(request, 'attendance/subject_form.html', {'form': form, 'title': 'Add Subject'})
 
 def subject_update(request, pk):
-    subject = get_object_or_404(Subject, pk=pk)
+    session_key = get_session_key(request)
+    subject = get_object_or_404(Subject, pk=pk, session_key=session_key)
     if request.method == 'POST':
         form = SubjectForm(request.POST, instance=subject)
         if form.is_valid():
@@ -171,7 +181,8 @@ def subject_update(request, pk):
     return render(request, 'attendance/subject_form.html', {'form': form, 'title': 'Edit Subject'})
 
 def subject_delete(request, pk):
-    subject = get_object_or_404(Subject, pk=pk)
+    session_key = get_session_key(request)
+    subject = get_object_or_404(Subject, pk=pk, session_key=session_key)
     if request.method == 'POST':
         subject.delete()
         return redirect('dashboard')
@@ -184,7 +195,8 @@ def toggle_attendance(request):
         subject_id = data.get('subject_id')
         date_str = data.get('date')
         
-        subject = get_object_or_404(Subject, id=subject_id)
+        session_key = get_session_key(request)
+        subject = get_object_or_404(Subject, id=subject_id, session_key=session_key)
         record_date = datetime.strptime(date_str, '%Y-%m-%d').date()
         
         record, created = AttendanceRecord.objects.get_or_create(
