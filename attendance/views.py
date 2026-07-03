@@ -21,6 +21,7 @@ def calculate_stats(subject):
     records = subject.attendance_records.all()
     present_count = records.filter(status='present').count()
     absent_count = records.filter(status='absent').count()
+    holiday_count = records.filter(status='holiday').count()
     total_held = present_count + absent_count
     
     attendance_percentage = 0
@@ -33,6 +34,7 @@ def calculate_stats(subject):
     return {
         'present': present_count,
         'absent': absent_count,
+        'holiday': holiday_count,
         'total': total_held,
         'percentage': percentage,
         'offset': round(offset, 2),
@@ -106,7 +108,7 @@ def subject_detail(request, subject_id, year=None, month=None):
         year = int(year)
         month = int(month)
         
-    cal = calendar.Calendar(firstweekday=0) # Monday=0
+    cal = calendar.Calendar(firstweekday=6) # Sunday=6
     month_days = cal.monthdatescalendar(year, month)
     
     start_date = month_days[0][0]
@@ -152,7 +154,7 @@ def subject_detail(request, subject_id, year=None, month=None):
         'prev_month': prev_month,
         'next_year': next_year,
         'next_month': next_month,
-        'days_of_week': ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        'days_of_week': ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
     }
     return render(request, 'attendance/subject_detail.html', context)
 

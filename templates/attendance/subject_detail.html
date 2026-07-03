@@ -15,30 +15,11 @@
     <div class="subject-meta">Target: {{ subject.target_percentage }}%</div>
 </div>
 
-<div class="stats-row">
-    <div class="stat-box">
-        <div class="stat-number">{{ stats.percentage }}%</div>
-        <div class="stat-name">Current</div>
-    </div>
-    <div class="stat-box">
-        <div class="stat-number">{{ stats.present }}</div>
-        <div class="stat-name">Present</div>
-    </div>
-    <div class="stat-box">
-        <div class="stat-number">{{ stats.absent }}</div>
-        <div class="stat-name">Absent</div>
-    </div>
-    <div class="stat-box">
-        <div class="stat-number">{{ stats.total }}</div>
-        <div class="stat-name">Total Classes</div>
-    </div>
-</div>
-
 <div class="calendar-container">
     <div class="calendar-header">
-        <a href="{% url 'subject_detail_month' subject.id prev_year prev_month %}" class="cal-nav">&larr;</a>
-        <h2>{{ month_name }} {{ year }}</h2>
-        <a href="{% url 'subject_detail_month' subject.id next_year next_month %}" class="cal-nav">&rarr;</a>
+        <a href="{% url 'subject_detail_month' subject.id prev_year prev_month %}" class="cal-btn cal-btn-prev">&lt; PREV</a>
+        <h2 class="calendar-title">{{ month_name|slice:":3"|upper }} {{ year }}</h2>
+        <a href="{% url 'subject_detail_month' subject.id next_year next_month %}" class="cal-btn cal-btn-next">NEXT &gt;</a>
     </div>
     
     <div class="calendar-grid">
@@ -49,21 +30,55 @@
         {% for week in calendar %}
             {% for day in week %}
             <div class="cal-cell {% if not day.is_current_month %}other-month{% endif %} {% if day.is_today %}today{% endif %} status-{{ day.status }}"
-                 data-date="{{ day.date }}" data-subject="{{ subject.id }}">
+                 {% if day.is_current_month %}data-date="{{ day.date }}" data-subject="{{ subject.id }}"{% endif %}>
+                {% if day.is_current_month %}
                 <span class="day-number">{{ day.day }}</span>
-                <span class="status-indicator"></span>
+                {% endif %}
             </div>
             {% endfor %}
         {% endfor %}
     </div>
     
-    <div class="calendar-legend">
-        <div class="legend-item"><span class="legend-color unmarked"></span> No class</div>
-        <div class="legend-item"><span class="legend-color present"></span> Present</div>
-        <div class="legend-item"><span class="legend-color absent"></span> Absent</div>
-        <div class="legend-item"><span class="legend-color holiday"></span> Holiday</div>
+    <div class="cal-stats-card">
+        <div class="stats-card-header">
+            <span>Attendance for all months</span>
+            <svg class="chevron-down" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+        <div class="stats-card-grid">
+            <div class="stats-card-item">
+                <span class="square-icon block-present"></span>
+                <span class="stats-card-label">Present : {{ stats.present }}</span>
+            </div>
+            <div class="stats-card-item">
+                <span class="square-icon block-absent"></span>
+                <span class="stats-card-label">Absent : {{ stats.absent }}</span>
+            </div>
+            <div class="stats-card-item">
+                <span class="square-icon block-holiday"></span>
+                <span class="stats-card-label">Holiday : {{ stats.holiday }}</span>
+            </div>
+            <div class="stats-card-item">
+                <span class="square-icon block-target">T</span>
+                <span class="stats-card-label">Target : {{ subject.target_percentage|floatformat:"0" }}%</span>
+            </div>
+        </div>
+        <div class="stats-card-footer">
+            <div class="percentage-display">Percentage : {{ stats.percentage|floatformat:"0" }}%</div>
+            <a href="#" class="more-info-btn">
+                <svg class="info-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                <span>More Info</span>
+            </a>
+        </div>
     </div>
-    <p class="legend-hint">Tap a day to cycle status: Unmarked &rarr; Present &rarr; Absent &rarr; Holiday</p>
 </div>
 
 {% csrf_token %}

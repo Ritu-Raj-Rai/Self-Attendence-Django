@@ -373,118 +373,237 @@ main.container {
     font-size: 0.875rem;
 }
 
-/* Calendar */
+/* Calendar Redesign */
 .calendar-container {
     background: var(--surface-color);
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
-    padding: 30px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 30px;
 }
 
 .calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-.cal-nav {
-    display: flex;
+.calendar-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: 1px;
+}
+
+.cal-btn {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--bg-color);
-    font-size: 1.2rem;
-    transition: background 0.2s;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(180deg, #166534 0%, #14532d 50%, #000000 100%);
+    border: 1px solid #14532d;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+    user-select: none;
 }
-.cal-nav:hover {
-    background: var(--border-color);
+
+.cal-btn:hover {
+    opacity: 0.95;
+}
+
+.cal-btn:active {
+    transform: scale(0.97);
 }
 
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 10px;
+    border-top: 1px solid #333333;
+    border-left: 1px solid #333333;
+    margin-bottom: 25px;
 }
 
 .cal-day-header {
     text-align: center;
-    font-weight: 600;
-    color: var(--text-muted);
+    font-weight: 700;
+    color: #111111;
     padding: 10px 0;
+    border-bottom: 1px solid #333333;
+    border-right: 1px solid #333333;
+    font-size: 0.85rem;
+    background-color: #ffffff;
 }
 
 .cal-cell {
-    aspect-ratio: 1;
-    border-radius: 12px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    cursor: pointer;
-    background: var(--bg-color);
-    transition: all 0.2s;
-    user-select: none;
-}
-.cal-cell:hover {
-    transform: scale(1.02);
-    box-shadow: var(--shadow-sm);
-}
-.cal-cell.other-month {
-    opacity: 0.4;
-}
-.cal-cell.today {
-    border: 2px solid var(--primary);
-}
-.cal-cell.status-unmarked {
-    background: var(--bg-color);
-}
-.cal-cell.status-present {
-    background: #15803d;
-    color: white;
-}
-.cal-cell.status-absent {
-    background: #b91c1c;
-    color: white;
-}
-.cal-cell.status-holiday {
-    background: #facc15;
-    color: #713f12;
-}
-.day-number {
-    font-weight: 500;
-}
-
-.calendar-legend {
-    display: flex;
-    gap: 20px;
-    margin-top: 30px;
-    flex-wrap: wrap;
-}
-.legend-item {
+    aspect-ratio: 1.1;
+    border-bottom: 1px solid #333333;
+    border-right: 1px solid #333333;
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.875rem;
-    color: var(--text-muted);
+    justify-content: center;
+    cursor: pointer;
+    background: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: background 0.1s;
+    position: relative;
 }
-.legend-color {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-}
-.legend-color.unmarked { background: var(--bg-color); border: 1px solid var(--border-color); }
-.legend-color.present { background: #15803d; }
-.legend-color.absent { background: #b91c1c; }
-.legend-color.holiday { background: #facc15; }
 
-.legend-hint {
-    margin-top: 15px;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    font-style: italic;
+.cal-cell.other-month {
+    background: #ffffff;
+    cursor: default;
+}
+
+.cal-cell.today {
+    outline: 3px solid #0000ff;
+    outline-offset: -3px;
+    z-index: 2;
+}
+
+.cal-cell.status-unmarked {
+    background: #ffffff;
+    color: #111111;
+}
+
+.cal-cell.status-present {
+    background: #00a84f !important;
+    color: white !important;
+}
+
+.cal-cell.status-absent {
+    background: #d32f2f !important;
+    color: white !important;
+}
+
+.cal-cell.status-holiday {
+    background: #f57c00 !important;
+    color: white !important;
+}
+
+/* Stats Card at the Bottom */
+.cal-stats-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.stats-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 10px;
+}
+
+.chevron-down {
+    color: #4b5563;
+}
+
+.stats-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 15px;
+    column-gap: 30px;
+    margin-bottom: 20px;
+}
+
+.stats-card-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.square-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.square-icon.block-present {
+    background: #00a84f;
+}
+
+.square-icon.block-absent {
+    background: #d32f2f;
+}
+
+.square-icon.block-holiday {
+    background: #f57c00;
+}
+
+.square-icon.block-target {
+    background: #00a84f;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stats-card-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.stats-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 20px;
+}
+
+.percentage-display {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #111111;
+}
+
+.more-info-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(180deg, #4b5563 0%, #1f2937 100%);
+    border: 1px solid #111827;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.more-info-btn:hover {
+    opacity: 0.95;
+    color: white;
+    text-decoration: none;
+}
+
+.more-info-btn:active {
+    transform: scale(0.97);
+}
+
+.info-icon {
+    stroke-width: 2.5px;
 }
 
 /* Forms */
