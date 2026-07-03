@@ -14,10 +14,4 @@ services:
       - key: WEB_CONCURRENCY
         value: 4
       - key: DATABASE_URL
-        fromDatabase:
-          name: self-attendance-db
-          property: connectionString
-
-databases:
-  - name: self-attendance-db
-    plan: free
+        sync: false
