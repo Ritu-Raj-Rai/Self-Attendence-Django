@@ -49,34 +49,23 @@
         <div class="stats-card-grid">
             <div class="stats-card-item">
                 <span class="square-icon block-present"></span>
-                <span class="stats-card-label">Present : {{ stats.present }}</span>
+                <span class="stats-card-label" id="stats-present">Present : {{ stats.present }}</span>
             </div>
             <div class="stats-card-item">
                 <span class="square-icon block-absent"></span>
-                <span class="stats-card-label">Absent : {{ stats.absent }}</span>
+                <span class="stats-card-label" id="stats-absent">Absent : {{ stats.absent }}</span>
             </div>
             <div class="stats-card-item">
                 <span class="square-icon block-holiday"></span>
-                <span class="stats-card-label">Holiday : {{ stats.holiday }}</span>
+                <span class="stats-card-label" id="stats-holiday">Holiday : {{ stats.holiday }}</span>
             </div>
             <div class="stats-card-item">
                 <span class="square-icon block-target">T</span>
-                <span class="stats-card-label">Target : {{ subject.target_percentage|floatformat:"0" }}%</span>
+                <span class="stats-card-label" id="stats-target">Target : {{ subject.target_percentage|floatformat:"0" }}%</span>
             </div>
         </div>
         <div class="stats-card-footer">
-            <div class="percentage-display">Percentage : {{ stats.percentage|floatformat:"0" }}%</div>
-            <a href="#" class="more-info-btn">
-                <svg class="info-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="8" y1="6" x2="21" y2="6"></line>
-                    <line x1="8" y1="12" x2="21" y2="12"></line>
-                    <line x1="8" y1="18" x2="21" y2="18"></line>
-                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                </svg>
-                <span>More Info</span>
-            </a>
+            <div class="percentage-display" id="stats-percentage">Percentage : {{ stats.percentage|floatformat:"0" }}%</div>
         </div>
     </div>
 </div>

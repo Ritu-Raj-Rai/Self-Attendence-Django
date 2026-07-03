@@ -563,7 +563,7 @@ main.container {
 
 .stats-card-footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     border-top: 1px solid #f1f5f9;
     padding-top: 20px;
@@ -573,37 +573,6 @@ main.container {
     font-size: 1.15rem;
     font-weight: 700;
     color: #111111;
-}
-
-.more-info-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: white;
-    background: linear-gradient(180deg, #4b5563 0%, #1f2937 100%);
-    border: 1px solid #111827;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    text-decoration: none;
-    transition: opacity 0.2s, transform 0.1s;
-}
-
-.more-info-btn:hover {
-    opacity: 0.95;
-    color: white;
-    text-decoration: none;
-}
-
-.more-info-btn:active {
-    transform: scale(0.97);
-}
-
-.info-icon {
-    stroke-width: 2.5px;
 }
 
 /* Forms */

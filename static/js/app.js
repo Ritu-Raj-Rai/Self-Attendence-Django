@@ -37,13 +37,27 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (!dateStr || !subjectId) return;
 
+            // Prevent multiple rapid clicks on the same day before the previous request finishes
+            if (cell.dataset.loading === 'true') return;
+            cell.dataset.loading = 'true';
+
             const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
-            if (!csrfTokenElement) return;
+            if (!csrfTokenElement) {
+                cell.dataset.loading = 'false';
+                return;
+            }
             const csrfToken = csrfTokenElement.value;
             
             // Optimistic UI update
-            const match = cell.className.match(/status-(\w+)/);
-            const currentStatus = match ? match[1] : 'unmarked';
+            const statuses = ['unmarked', 'present', 'absent', 'holiday'];
+            let currentStatus = 'unmarked';
+            for (const s of statuses) {
+                if (cell.classList.contains(`status-${s}`)) {
+                    currentStatus = s;
+                    break;
+                }
+            }
+            
             let nextStatus = 'present';
             if (currentStatus === 'present') {
                 nextStatus = 'absent';
@@ -53,9 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 nextStatus = 'unmarked';
             }
             
-            const originalClassName = cell.className;
-            cell.className = cell.className.replace(/status-\w+/, `status-${nextStatus}`);
-            cell.style.opacity = '0.7';
+            const revertStatus = () => {
+                cell.classList.remove(`status-${nextStatus}`);
+                cell.classList.add(`status-${currentStatus}`);
+            };
+            
+            cell.classList.remove(`status-${currentStatus}`);
+            cell.classList.add(`status-${nextStatus}`);
             
             try {
                 const response = await fetch('/api/toggle-attendance/', {
@@ -74,29 +92,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (data.success) {
                     // Update to match server response exactly, just in case
-                    cell.className = cell.className.replace(/status-\w+/, `status-${data.status}`);
+                    cell.classList.remove(`status-${nextStatus}`);
+                    cell.classList.add(`status-${data.status}`);
                     
                     if (data.stats) {
-                        const statBoxes = document.querySelectorAll('.stat-box .stat-number');
-                        if (statBoxes.length >= 4) {
-                            statBoxes[0].textContent = `${data.stats.percentage}%`;
-                            statBoxes[1].textContent = data.stats.present;
-                            statBoxes[2].textContent = data.stats.absent;
-                            statBoxes[3].textContent = data.stats.total;
-                        }
+                        const elPresent = document.getElementById('stats-present');
+                        const elAbsent = document.getElementById('stats-absent');
+                        const elHoliday = document.getElementById('stats-holiday');
+                        const elPercentage = document.getElementById('stats-percentage');
+                        
+                        if (elPresent) elPresent.textContent = `Present : ${data.stats.present}`;
+                        if (elAbsent) elAbsent.textContent = `Absent : ${data.stats.absent}`;
+                        if (elHoliday) elHoliday.textContent = `Holiday : ${data.stats.holiday}`;
+                        if (elPercentage) elPercentage.textContent = `Percentage : ${Math.round(data.stats.percentage)}%`;
                     }
                 } else {
-                    // Revert to original state on failure
-                    cell.className = originalClassName;
+                    revertStatus();
                     alert('Failed to update attendance.');
                 }
             } catch (error) {
                 console.error('Error toggling attendance:', error);
-                // Revert to original state on failure
-                cell.className = originalClassName;
+                revertStatus();
                 alert('An error occurred.');
             } finally {
-                cell.style.opacity = '1';
+                cell.dataset.loading = 'false';
             }
         }
     });
