@@ -21,7 +21,7 @@
 {% if subjects %}
 <div class="subject-grid">
     {% for item in subjects %}
-    <div class="subject-card" style="--subject-color: {{ item.obj.color }}" onclick="if(!event.target.closest('.dropdown')){ window.location='{% url 'subject_detail' item.obj.id %}' }">
+    <div class="subject-card" style="--subject-color: {{ item.obj.color }}" data-url="{% url 'subject_detail' item.obj.id %}" onclick="if(!event.target.closest('.dropdown')){ window.location=this.dataset.url; }">
         <div class="card-header">
             <h3>{{ item.obj.name }}</h3>
             <div class="dropdown">
@@ -51,9 +51,8 @@
             <div class="progress-ring-container">
                 <svg class="progress-ring" width="80" height="80">
                     <circle class="ring-bg" cx="40" cy="40" r="34"></circle>
-                    <circle class="ring-progress" cx="40" cy="40" r="34" 
-                            style="stroke: {% if item.stats.percentage >= item.obj.target_percentage %}var(--success-color){% else %}var(--danger-color){% endif %};
-                                   stroke-dashoffset: calc(213.6 - (213.6 * {{ item.stats.percentage }}) / 100);"></circle>
+                    <circle class="ring-progress {% if item.stats.percentage >= item.obj.target_percentage %}success{% else %}danger{% endif %}" cx="40" cy="40" r="34" 
+                            stroke-dashoffset="{{ item.stats.offset }}"></circle>
                 </svg>
                 <div class="ring-text">{{ item.stats.percentage }}%</div>
             </div>

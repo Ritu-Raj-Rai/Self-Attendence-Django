@@ -22,11 +22,15 @@ def calculate_stats(subject):
     if total_held > 0:
         attendance_percentage = (present_count / total_held) * 100
         
+    percentage = round(attendance_percentage, 1)
+    offset = 213.6 - (213.6 * percentage) / 100
+    
     return {
         'present': present_count,
         'absent': absent_count,
         'total': total_held,
-        'percentage': round(attendance_percentage, 1),
+        'percentage': percentage,
+        'offset': round(offset, 2),
     }
 
 @never_cache
