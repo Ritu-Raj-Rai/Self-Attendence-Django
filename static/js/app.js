@@ -41,9 +41,23 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!csrfTokenElement) return;
             const csrfToken = csrfTokenElement.value;
             
+            // Optimistic UI update
+            const match = cell.className.match(/status-(\w+)/);
+            const currentStatus = match ? match[1] : 'unmarked';
+            let nextStatus = 'present';
+            if (currentStatus === 'present') {
+                nextStatus = 'absent';
+            } else if (currentStatus === 'absent') {
+                nextStatus = 'holiday';
+            } else if (currentStatus === 'holiday') {
+                nextStatus = 'unmarked';
+            }
+            
+            const originalClassName = cell.className;
+            cell.className = cell.className.replace(/status-\w+/, `status-${nextStatus}`);
+            cell.style.opacity = '0.7';
+            
             try {
-                cell.style.opacity = '0.7';
-
                 const response = await fetch('/api/toggle-attendance/', {
                     method: 'POST',
                     headers: {
@@ -59,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
                 
                 if (data.success) {
+                    // Update to match server response exactly, just in case
                     cell.className = cell.className.replace(/status-\w+/, `status-${data.status}`);
                     
                     if (data.stats) {
@@ -71,10 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                 } else {
+                    // Revert to original state on failure
+                    cell.className = originalClassName;
                     alert('Failed to update attendance.');
                 }
             } catch (error) {
                 console.error('Error toggling attendance:', error);
+                // Revert to original state on failure
+                cell.className = originalClassName;
                 alert('An error occurred.');
             } finally {
                 cell.style.opacity = '1';
